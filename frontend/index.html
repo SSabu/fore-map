@@ -7,7 +7,6 @@
   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
   crossorigin=""/>
   <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" type="text/css">
-  <link rel="stylesheet" href="../dist/leaflet-slider.css"/>
   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
   integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
   crossorigin=""></script>
@@ -17,21 +16,28 @@
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://unpkg.com/d3-simple-slider"></script>
-  <script src="https://d3js.org/d3.v4.min.js"></script>
-	<script src="https://unpkg.com/d3-marcon@2.0.2/build/d3-marcon.min.js"></script>
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.0.1/spin.min.js'></script>
+
 </head>
 <body>
-    <div id="mapid"></div>
-    <div id="chart"></div>
+    <div class="row">
+      <div class="column middle" id="mapid"></div>
+      <div class="column right" id="legend"></div>
+    </div>
     <div id="container">
-      <div><p id="value-time"></p></div>
-      <div><div id="slider-time"></div>
+      <div id="controls">
         <button id="play">Play</button>
         <button id="stop">Stop</button>
         <button id="reload">Reload</button>
       </div>
+      <div id="left-arrow"><svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M20 .755l-14.374 11.245 14.374 11.219-.619.781-15.381-12 15.391-12 .609.755z"/></svg></div>
+      <div id="time">
+      <div id="slider-time"></div>
     </div>
-  <script src="../dist/leaflet-slider.js"></script>
+    <div id="right-arrow"><svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M4 .755l14.374 11.245-14.374 11.219.619.781 15.381-12-15.391-12-.609.755z"/></svg></div>
+    <p id="value-time"></p></div>
+  <script src="../dist/leaflet.spin.min.js" charset="utf-8"></script>
   <script src="./script.js"></script>
   <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
 </body>

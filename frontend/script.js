@@ -1,6 +1,18 @@
 !async function(){
 
-  var myMap = L.map('mapid').setView([33.2918, -112.4291], 8.5);
+  let zoom;
+
+  if (window.innerWidth > 1800) {
+    zoom = 8.5;
+  } else if (window.innerWidth > 1500) {
+    zoom = 9;
+  }
+
+  let geoJson = await fetch("/maricopa_tracts.json")
+   .then(res => res.json())
+   .then(function(geoJson) { return geoJson; });
+
+  var myMap = L.map('mapid').setView([33.2718, -112.2291], zoom);
 
   L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/256/{z}/{x}/{y}?access_token={accessToken}', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -9,29 +21,23 @@
       accessToken: 'pk.eyJ1Ijoic2FidW1hZm9vIiwiYSI6ImNqMWE3cnlqcTA5dncyd216YjI0bnY4dGEifQ.fgmXgmkvialdBd3D405_BA'
   }).addTo(myMap);
 
+  legend();
+
+  slider();
+
+  myMap.spin(true);
+
   let dataObj = await fetch("/closures")
   .then(res => res.json())
   .then(data => showData(data));
 
-  let geoJson = await fetch("/maricopa_tracts.json")
-   .then(res => res.json())
-   .then(function(geoJson) { return geoJson; });
-
-  slider();
-
   let gja = geoJsonConversion(dataObj);
-
-  // console.log(gja);
-
-  var ptLyr96 = gja[0][1996];
-
-  // L.geoJSON(ptLyr96).addTo(myMap);
 
   var ctCount = pointCount(geoJson, gja);
 
   var geoJson96 = ctCount[0][1996];
 
-  var gj96 = L.geoJSON(geoJson96, {style: style}).addTo(myMap);
+  var gj96 = L.geoJSON(geoJson96, {onEachFeature: function(feature,layer) { layer.bindPopup('<p>'+feature.properties.NAMELSAD+' , '+feature.properties.value+'</p>')  }, style: style}).addTo(myMap);
 
   var ctJsonObj = [];
 
@@ -39,16 +45,20 @@
     var yearLyrObj = {};
     var yearLyr = Object.keys(ct)[0];
     var lyrStr = "gj"+yearLyr;
-    lyrStr = L.geoJson(ct[yearLyr], {style: style});
+    lyrStr = L.geoJson(ct[yearLyr], {onEachFeature: function(feature,layer) {layer.bindPopup('<p>'+feature.properties.NAMELSAD+' , '+feature.properties.value+'</p>')}, style: style});
     yearLyrObj[yearLyr]=lyrStr;
     ctJsonObj.push(yearLyrObj);
   });
 
-  // console.log("this is ct object", ctJsonObj);
+  // console.log(myMap.hasLayer(gj96));
+
+  if (myMap.hasLayer(gj96)) {
+    myMap.spin(false);
+  }
 
   function slider() {
 
-    var dataTime = [1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019];
+    var dataTime = [1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018];
 
     var sliderTime = d3
       .sliderBottom()
@@ -60,8 +70,6 @@
       .tickValues(dataTime)
       .on('onchange', val => {
         d3.select('p#value-time').text(val);
-
-        // console.log(sliderTime.value());
 
         gj96.remove();
 
@@ -76,12 +84,12 @@
           lyr1997.removeFrom(myMap);
           lyr1996.addTo(myMap);
 
-        } else if (val === 2019) {
+        } else if (val === 2018) {
 
-            var lyr2019 = ctJsonObj[val-1996][val];
-            var lyr2018 = ctJsonObj[less-1996][less];
-            lyr2018.removeFrom(myMap);
-            lyr2019.addTo(myMap)
+            var lyr2018 = ctJsonObj[val-1996][val];
+            var lyr2017 = ctJsonObj[less-1996][less];
+            lyr2017.removeFrom(myMap);
+            lyr2018.addTo(myMap)
         }
 
         else {
@@ -100,31 +108,23 @@
     var gTime = d3
       .select('div#slider-time')
       .append('svg')
-      .attr('width', 800)
-      .attr('height', 100)
+      .attr('width', 730)
+      .attr('height', 50)
       .append('g')
-      .attr('transform', 'translate(30,30)');
+      .attr('transform', 'translate(15,10)');
 
     gTime.call(sliderTime);
 
     d3.select('p#value-time').text(sliderTime.value());
-
-    var b = d3.select("#slider-time");
-
-    // console.log(typeof(sliderTime.value()));
-
-    // sliderTime.value(2008);
 
     var myTimer;
 
     var year = 1996;
 
     d3.select("#play").on("click", function() {
-      // clearInterval(myTimer);
       myTimer = setInterval(function() {
-        // console.log(year);
         sliderTime.value(++year);
-        if (year === 2020) {
+        if (year === 2019) {
           clearInterval(myTimer);
         }
       }, 1000);
@@ -138,122 +138,153 @@
 
       var currYear = sliderTime.value();
 
-      // console.log("this is current year", currYear);
-
-      // console.log(ctJsonObj[currYear-1996][currYear]);
-
       var currYrLyr = ctJsonObj[currYear-1996][currYear];
 
       currYrLyr.removeFrom(myMap);
 
       sliderTime.value(1996);
+
+      year = 1996;
+    });
+
+    d3.select("#right-arrow").on("click", function() {
+      var currYrRt = sliderTime.value();
+      sliderTime.value(++currYrRt);
+    });
+
+    d3.select("#left-arrow").on("click", function() {
+      var currYrLft = sliderTime.value();
+      sliderTime.value(--currYrLft);
     });
 
   };
 
-
-
-  // function play() {
-  //
-  // };
-
   function legend() {
 
-    var svg = d3.select(myMap.getPanes().overlayPane).append("svg").attr("width", 2000).attr("height", 500).attr('transform', 'translate(1300,340)');
+    var title = d3.select("#legend").append("svg").attr("width", 200).attr("height",200).attr("transform","translate(15,20)");
+
+    title.append("rect").attr("width", 150).attr("height",100).attr("x",0).attr("y",0).attr("fill","none");
+
+    title.append("foreignObject")
+         .attr("x", 5)
+         .attr("y", 5)
+         .attr("width", 150)
+         .attr("height", 200)
+         .append("xhtml:body")
+         .html('<div style="width: 150px; font-size: 21px">Property Loss in America: Foreclosures by Census Tract in Maricopa County<br> (1996 - 2018)</div>');
+
+    var legendTitle = d3.select("#legend").append("svg").attr("width", 200).attr("height",200).attr("border", 1).attr("transform", "translate(15,300)");
+
+    legendTitle.append("text")
+               .text("Number of Foreclosures")
+               .attr("fill","black")
+               .attr("x", 10)
+               .attr("y", 25);
+
+    legendTitle.append("rect")
+               .attr("x",0)
+               .attr("y",0)
+               .attr("height", 200)
+               .attr("width", 200)
+               .attr("stroke","black")
+               .attr("fill","none")
+               .attr("stroke-width", 1);
+
+    var svg = d3.select("#legend").append("svg").attr("width", 200).attr("height", 160).attr('transform', 'translate(0,140)');
 
     svg.append("circle")
-       .attr("cx", 100)
+       .attr("cx", 80)
        .attr("cy", 20)
        .attr("r", 5)
        .attr("stroke", "black")
        .attr("fill", "#800026");
 
     svg.append("text")
-       .attr("x", 110)
+       .attr("x", 90)
        .attr("y", 22)
        .text(">= 100")
        .style("font-size", "13px")
        .attr("alignment-baseline", "middle");
 
      svg.append("circle")
-        .attr("cx", 100)
+        .attr("cx", 80)
         .attr("cy", 40)
         .attr("r", 5)
         .attr("stroke", "black")
         .attr("fill", "#BD0026");
 
     svg.append("text")
-       .attr("x", 110)
+       .attr("x", 90)
        .attr("y", 42)
        .text(">= 75")
        .style("font-size", "13px")
        .attr("alignment-baseline", "middle");
 
     svg.append("circle")
-       .attr("cx", 100)
+       .attr("cx", 80)
        .attr("cy", 60)
        .attr("r", 5)
        .attr("stroke", "black")
        .attr("fill", "#E31A1C");
 
    svg.append("text")
-      .attr("x", 110)
+      .attr("x", 90)
       .attr("y", 62)
       .text(">= 50")
       .style("font-size", "13px")
       .attr("alignment-baseline", "middle");
 
      svg.append("circle")
-        .attr("cx", 100)
+        .attr("cx", 80)
         .attr("cy", 80)
         .attr("r", 5)
         .attr("stroke", "black")
         .attr("fill", "#FC4E2A");
 
     svg.append("text")
-       .attr("x", 110)
+       .attr("x", 90)
        .attr("y", 82)
        .text(">= 35")
        .style("font-size", "13px")
        .attr("alignment-baseline", "middle");
 
       svg.append("circle")
-         .attr("cx", 100)
+         .attr("cx", 80)
          .attr("cy", 100)
          .attr("r", 5)
          .attr("stroke", "black")
          .attr("fill", "#FD8D3C");
 
      svg.append("text")
-        .attr("x", 110)
+        .attr("x", 90)
         .attr("y", 102)
         .text(">= 10")
         .style("font-size", "13px")
         .attr("alignment-baseline", "middle");
 
        svg.append("circle")
-          .attr("cx", 100)
+          .attr("cx", 80)
           .attr("cy", 120)
           .attr("r", 5)
           .attr("stroke", "black")
           .attr("fill", "#FEB24C");
 
       svg.append("text")
-         .attr("x", 110)
+         .attr("x", 90)
          .attr("y", 122)
          .text("> 0")
          .style("font-size", "13px")
          .attr("alignment-baseline", "middle");
 
         svg.append("circle")
-           .attr("cx", 100)
+           .attr("cx", 80)
            .attr("cy", 140)
            .attr("r", 5)
            .attr("stroke", "black")
            .attr("fill", "#FFF");
 
        svg.append("text")
-          .attr("x", 110)
+          .attr("x", 90)
           .attr("y", 142)
           .text("0")
           .style("font-size", "13px")
@@ -261,7 +292,7 @@
 
   };
 
-  legend();
+
 
   function pointCount(polyGeoJson, pointGeoJsonArray) {
     var polyGeoJsonCount = [];
@@ -280,14 +311,12 @@
       ctYearObj[year] = pointsWithin;
       newYearObj[year] = pointsWithin;
       polyGeoJsonCount.push(newYearObj);
-      // geoJsonCTArrayWithCount.push(ctYearObj);
       });
       return polyGeoJsonCount;
     };
 
   function showData(data) {
-    // console.log(data);
-    const years = [1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019];
+    const years = [1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018];
     const newDataObj = [];
     years.forEach(function(year) {
       var currYear = year;
@@ -303,7 +332,6 @@
       yearObj[year] = currData;
       newDataObj.push(yearObj);
     });
-    // console.log("new data object", newDataObj);
     return newDataObj;
   };
 
@@ -333,14 +361,6 @@
         geoJsonArray.push(yearObj);
         });
       });
-      // var yearObj18 = {};
-      // var fc18 = {
-      //   "type": "FeatureCollection",
-      //   "features": []
-      // }
-      // yearObj18[2018] = fc18;
-      // geoJsonArray.splice(geoJsonArray.length-1,0,yearObj18);
-      // console.log(geoJsonArray);
       return geoJsonArray;
   };
 

@@ -1,67 +1,66 @@
 #mapid {
-  height: 640px;
-  width: 100%;
-  /* position: absolute; */
+  height: 630px;
+  border: 1px solid black;
 }
 
-#map-nav {
-    /* position: absolute; */
-    left: 60px;
-    top: 300px;
-    width: 1000px;
-    height: 300px;
-    /* z-index: 2; */
+.slider-time {
+  float: left;
+  width: 50%;
+}
+
+.column {
+  float: left;
+  /* padding: 10px; */
+  height: 300px;
+}
+
+.right {
+  width: 12%;
+}
+
+.middle {
+  width: 85%;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
 #container {
-     height: 100%;
-     display: flex;
      align-items: center;
      justify-content: center;
 }
 
- #chart svg line.track {
-     stroke-opacity: 0.4;
-     stroke: #000;
-     stroke-width: 10px;
- }
- #chart svg line.track-inset {
-     /* stroke: steelblue; */
-     stroke-width: 8px;
- }
- #chart svg line.track-overlay {
-     stroke: #ccc;
-     stroke-width: 40px;
-     stroke-opacity: 0;
-     cursor: crosshair;
- }
- #chart svg .handle {
-     /* fill: red; */
-     stroke: #000;
- }
- #chart svg line.track-overlay, #chart svg line.track, #chart svg line.track-inset {
-     stroke-linecap: round;
- }
+#controls {
+  float:left;
+  margin-left: 50px;
+  padding:10px;
+}
 
- .range-body {
-		fill: #666;
-	}
-	.range-dragger {
-		fill: tomato;
-		cursor: pointer;
-	}
-	.range-label {
-		fill: #fff;
-		text-anchor: middle;
-		font-size: 2em;
-		pointer-events: none;
-	}
-	.range-axis line, .range-axis path {
-		stroke: #666;
-	}
-	.range-axis text {
-		fill: #666;
-	}
+#time {
+  float: left;
+  padding-top: 10px;
+}
+
+#right-arrow {
+  float: left;
+  margin-right: 60px;
+  cursor: pointer;
+  padding-top: 10px;
+}
+
+#left-arrow {
+  float: left;
+  margin-left: 60px;
+  cursor: pointer;
+  padding-top: 10px;
+}
+
+#value-time {
+  padding: 5px;
+}
 
  body {
  		margin: 0;

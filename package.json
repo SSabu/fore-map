@@ -23,7 +23,9 @@
   "homepage": "https://github.com/SSabu/fore-map#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "leaflet-spin": "^1.1.2",
     "lodash": "^4.17.15",
-    "pg": "^7.18.1"
+    "pg": "^7.18.1",
+    "spin.js": "^4.1.0"
   }
 }
