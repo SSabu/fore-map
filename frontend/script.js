@@ -12,7 +12,7 @@
    .then(res => res.json())
    .then(function(geoJson) { return geoJson; });
 
-  var myMap = L.map('mapid').setView([33.2718, -112.2291], zoom);
+  var myMap = L.map('mapid', {minZoom: 9}).setView([33.3218, -112.4291], zoom);
 
   L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/256/{z}/{x}/{y}?access_token={accessToken}', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -37,7 +37,7 @@
 
   var geoJson96 = ctCount[0][1996];
 
-  var gj96 = L.geoJSON(geoJson96, {onEachFeature: function(feature,layer) { layer.bindPopup('<p>'+feature.properties.NAMELSAD+' , '+feature.properties.value+'</p>')  }, style: style}).addTo(myMap);
+  var gj96 = L.geoJSON(geoJson96, {onEachFeature: function(feature,layer) { layer.bindPopup('<p>'+feature.properties.NAMELSAD+'<br> Foreclosures: '+feature.properties.value+'</p>')  }, style: style}).addTo(myMap);
 
   var ctJsonObj = [];
 
@@ -45,7 +45,7 @@
     var yearLyrObj = {};
     var yearLyr = Object.keys(ct)[0];
     var lyrStr = "gj"+yearLyr;
-    lyrStr = L.geoJson(ct[yearLyr], {onEachFeature: function(feature,layer) {layer.bindPopup('<p>'+feature.properties.NAMELSAD+' , '+feature.properties.value+'</p>')}, style: style});
+    lyrStr = L.geoJson(ct[yearLyr], {onEachFeature: function(feature,layer) {layer.bindPopup('<p>'+feature.properties.NAMELSAD+'<br> Foreclosures: '+feature.properties.value+'</p>')}, style: style});
     yearLyrObj[yearLyr]=lyrStr;
     ctJsonObj.push(yearLyrObj);
   });
@@ -161,17 +161,17 @@
 
   function legend() {
 
-    var title = d3.select("#legend").append("svg").attr("width", 200).attr("height",200).attr("transform","translate(15,20)");
+    var title = d3.select("#legend").append("svg").attr("width", 200).attr("height",200).attr("transform","translate(15,-5)");
 
     title.append("rect").attr("width", 150).attr("height",100).attr("x",0).attr("y",0).attr("fill","none");
 
     title.append("foreignObject")
          .attr("x", 5)
-         .attr("y", 5)
+         .attr("y", 0)
          .attr("width", 150)
          .attr("height", 200)
          .append("xhtml:body")
-         .html('<div style="width: 150px; font-size: 21px">Property Loss in America: Foreclosures by Census Tract in Maricopa County<br> (1996 - 2018)</div>');
+         .html('<div style="width: 150px; font-size: 21px"><u>Property Loss in America</u>: Foreclosures by Census Tract in Maricopa County<br> (1996 - 2018)</div>');
 
     var legendTitle = d3.select("#legend").append("svg").attr("width", 200).attr("height",200).attr("border", 1).attr("transform", "translate(15,300)");
 

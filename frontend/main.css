@@ -28,6 +28,10 @@
   clear: both;
 }
 
+.row {
+  padding: 10px;
+}
+
 #container {
      align-items: center;
      justify-content: center;
@@ -41,21 +45,18 @@
 
 #time {
   float: left;
-  padding-top: 10px;
 }
 
 #right-arrow {
   float: left;
   margin-right: 60px;
   cursor: pointer;
-  padding-top: 10px;
 }
 
 #left-arrow {
   float: left;
   margin-left: 60px;
   cursor: pointer;
-  padding-top: 10px;
 }
 
 #value-time {
