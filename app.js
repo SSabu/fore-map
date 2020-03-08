@@ -3,7 +3,7 @@ const { Client } = require('pg');
 const routes = require("./routes");
 const path = require("path");
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 80;
 const app = express();
 
 const connectionString = "postgres://postgres:7C4dfo047wcdwrXZ1i8G@asukergis.cufrrg4evyls.us-west-1.rds.amazonaws.com:5432/foreclosure";

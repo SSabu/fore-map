@@ -217,9 +217,9 @@ function legend() {
        .attr("width", 150)
        .attr("height", 200)
        .append("xhtml:body")
-       .html('<div style="width: 150px; font-size: 19px">Count of Mortgage Foreclosures in Maricopa County by Census Tract, 1996 through 2018</div>');
+       .html('<div style="width: 150px; font-size: 19px">Count of Mortgage Foreclosures in Maricopa County by Census Tract, 1996 through 2018s</div>');
 
-  var dot = d3.select("#legend").append("svg").attr("width", 200).attr("height", 20).attr("transform","translate(60,-50)");
+  var dot = d3.select("#legend").append("svg").attr("width", 120).attr("height", 20).attr("transform","translate(60,-50)");
 
   dot.append("text")
      .attr("x", 10)
@@ -265,7 +265,7 @@ function legend() {
      .attr("cy", 20)
      .attr("r", 5)
      .attr("stroke", "black")
-     .attr("fill", "#E85DB3");
+     .attr("fill", "#F24BFF");
 
   svg.append("text")
      .attr("x", 90)
@@ -464,7 +464,7 @@ function geoJsonConversion(obj) {
 
   function getColor(value) {
     return value >= 100
-      ? "#E85DB3"
+      ? "#F24BFF"
       : value >= 75
       ? "#FF5B58"
       : value >= 50

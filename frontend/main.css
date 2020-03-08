@@ -10,7 +10,6 @@
 
 .column {
   float: left;
-  /* padding: 10px; */
   height: 300px;
 }
 
@@ -69,7 +68,6 @@
  	}
 
 #play {
-  /* position: absolute; */
   top: 140px;
   left: 50px;
   background: #69c974; #69c974
@@ -89,7 +87,6 @@
 }
 
 #stop {
-  /* position: absolute; */
   top: 140px;
   left: 50px;
   background: #f08080;
@@ -109,7 +106,6 @@
 }
 
 #reload {
-  /* position: absolute; */
   top: 140px;
   left: 50px;
   background: #f0c960;
@@ -150,10 +146,8 @@
 }
 
 .track-overlay {
-  /* pointer-events: stroke; */
   stroke-width: 50px;
   stroke: transparent;
-  /* cursor: crosshair; */
 }
 
 .handle {
