@@ -217,7 +217,7 @@ function legend() {
        .attr("width", 150)
        .attr("height", 200)
        .append("xhtml:body")
-       .html('<div style="width: 150px; font-size: 19px">Count of Mortgage Foreclosures in Maricopa County by Census Tract, 1996 through 2019</div>');
+       .html('<div style="width: 150px; font-size: 19px">Count of Mortgage Foreclosures in Maricopa County by Census Tract, 1996 through 2018</div>');
 
   var dot = d3.select("#legend").append("svg").attr("width", 120).attr("height", 20).attr("transform","translate(60,-50)");
 
