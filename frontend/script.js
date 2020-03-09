@@ -1,12 +1,12 @@
 !async function(){
 
-let zoom;
+let zoom = 9;
 
-if (window.innerWidth > 1800) {
-  zoom = 8.5;
-} else if (window.innerWidth > 1500) {
-  zoom = 9;
-}
+// if (window.innerWidth > 1800) {
+//   zoom = 8.5;
+// } else if (window.innerWidth > 1500) {
+//   zoom = 9;
+// }
 
 let geoJson = await fetch("/maricopa_2010.geojson")
  .then(res => res.json())
