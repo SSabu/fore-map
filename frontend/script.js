@@ -2,11 +2,7 @@
 
 let zoom = 9;
 
-// if (window.innerWidth > 1800) {
-//   zoom = 8.5;
-// } else if (window.innerWidth > 1500) {
-//   zoom = 9;
-// }
+// let zipxcel = await import("../dist/standalone.js");
 
 let geoJson = await fetch("/maricopa_2010.geojson")
  .then(res => res.json())
@@ -15,6 +11,12 @@ let geoJson = await fetch("/maricopa_2010.geojson")
 let geoJson2000 = await fetch("/marciopa_county_2000.json")
     .then(res => res.json())
     .then(function(geoJson) { return geoJson; });
+
+let phx = await fetch("/phx.json")
+    .then(res => res.json())
+    .then(function(geoJson) { return geoJson; });
+
+// console.log("this is phx", phx);
 
 var myMap = L.map('mapid', {minZoom: 9, maxZoom: 16}).setView([33.3218, -112.4291], zoom);
 
@@ -46,11 +48,80 @@ var ctCount2010 = pointCount(geoJson, gja2010);
 
 var ctCount = ctCount2000.concat(ctCount2010);
 
+// var excelData = ctCount2010.splice(4,9);
+
+// console.log("2010", ctCount2010);
+
+// console.log("2000", ctCount2000);
+
+// console.log(excelData);
+
+// console.log("this is excel", excelData);
+
+// [{
+//   value: 'Year',
+//   type: 'string'
+// }, {
+//   value: 'Census Tract',
+//   type:'string'
+// },
+// {
+//  value: 'Count of Foreclosures',
+//  type: 'string'
+// }]
+
+var fileData = [];
+
+// ctCount2010.forEach((el)=>{
+//
+//   var year = Object.keys(el)[0];
+
+  // console.log(year);
+
+  // var yearData = [];
+
+  // console.log(Object.keys(el)[0]);
+  // console.log(el[Object.keys(el)[0]]['features']);
+
+//   el[year]['features'].forEach((geoj) => {
+//
+//     var data = [];
+//     // console.log(geoj.properties.NAME, geoj.properties.value);
+//     var obj = {value: year, type:'string'};
+//     var obj1 = {value: geoj.properties.NAME, type:'string'};
+//     var obj2 = {value: geoj.properties.value, type:'number'};
+//     data.push(obj);
+//     data.push(obj1);
+//     data.push(obj2);
+//
+//     fileData.push(data);
+//
+//   });
+//
+// });
+
+// console.log(fileData);
+
+
+
+// from excelData - extract Name & value & year
+
+// var config = {
+//   filename: '_foreclosures2010_CT',
+//   sheet: {
+//     data: fileData
+//   }
+// };
+
+// zipcelx(config);
+
 var geoJson96 = ctCount[0][1996];
 
-myMap.createPane('foreclosure');
+myMap.createPane('phoenix');
 
 myMap.createPane('dotDensity');
+
+// console.log(geoJson96);
 
 var gj96 = L.geoJSON(geoJson96, {onEachFeature: function(feature,layer) { layer.bindPopup('<p>Census Tract: '+feature.properties.NAME+'<br> Foreclosures: '+feature.properties.value+'</p>')  }, style: style}).addTo(myMap);
 
@@ -62,11 +133,23 @@ var dotDensity2000 = L.esri.tiledMapLayer({
 //   url: 'https://tiles.arcgis.com/tiles/0OPQIK59PJJqLK0A/arcgis/rest/services/maricopa_2010/MapServer', pane: 'dotDensity'
 // });
 
+var phxStyle = {
+  fill: false,
+  weight: 1,
+  color: "#000000"
+};
+
+var phoenix = L.geoJSON(phx, {style: phxStyle, pane: 'phoenix'});
+
+phoenix.addTo(myMap);
+
 var dotDensity2010 = L.esri.tiledMapLayer({
   url: 'https://tiles.arcgis.com/tiles/0OPQIK59PJJqLK0A/arcgis/rest/services/2000_CT_1/MapServer', pane: 'dotDensity'
 });
 
 var ctJsonObj = [];
+
+// console.log(ctJsonObj);
 
 ctCount.forEach(function(ct) {
   var yearLyrObj = {};
@@ -86,8 +169,9 @@ if (myMap.hasLayer(gj96) && myMap.hasLayer(dotDensity2000)) {
   myMap.spin(false);
 }
 
-function slider() {
+console.log("ct count", ctJsonObj);
 
+function slider() {
 
   var dataTime = [1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018];
 
@@ -160,10 +244,12 @@ function slider() {
   d3.select("#play").on("click", function() {
     myTimer = setInterval(function() {
       sliderTime.value(++year);
+      player(year);
+      d3.select('p#value-time').text(year);
       if (year === 2019) {
         clearInterval(myTimer);
       }
-    }, 1500);
+    }, 2500);
   });
 
   d3.select("#stop").on("click", function() {
@@ -180,19 +266,34 @@ function slider() {
 
     sliderTime.value(1996);
 
+    phoenix.addTo(myMap);
+
     dotDensity2010.removeFrom(myMap);
     dotDensity2000.addTo(myMap);
 
     year = 1996;
+    d3.select('p#value-time').text(year);
   });
 
   d3.select("#right-arrow").on("click", function() {
+
     var currYrRt = sliderTime.value();
-    sliderTime.value(++currYrRt);
+
+    var next = ++currYrRt;
+
+    sliderTime.value(next);
+
+    player(next);
+
+    d3.select('p#value-time').text(next);
+
   });
 
   d3.select("#left-arrow").on("click", function() {
+
     var currYrLft = sliderTime.value();
+
+    var prior = --currYrLft;
 
     if (currYrLft === 2010) {
 
@@ -201,11 +302,53 @@ function slider() {
 
     }
 
-    sliderTime.value(--currYrLft);
+    sliderTime.value(prior);
+    player(prior);
+    d3.select('p#value-time').text(prior);
 
   });
 
 };
+
+function player(time) {
+
+  if (time > 2009) {
+    dotDensity2000.removeFrom(myMap);
+    dotDensity2010.addTo(myMap);
+  }
+
+  // gj96.remove();
+
+  var less = time - 1;
+  var more = time + 1;
+
+  if (time === 1996) {
+
+    var lyr1996 = ctJsonObj[time-1996][time];
+    var lyr1997 = ctJsonObj[more-1996][more];
+
+    lyr1997.removeFrom(myMap);
+    lyr1996.addTo(myMap);
+
+  } else if (time === 2018) {
+
+      var lyr2018 = ctJsonObj[time-1996][time];
+      var lyr2017 = ctJsonObj[less-1996][less];
+      lyr2017.removeFrom(myMap);
+      lyr2018.addTo(myMap)
+  }
+
+  else {
+    var thisLyr = ctJsonObj[time-1996][time];
+    var lessLyr = ctJsonObj[less-1996][less];
+    var moreLyr = ctJsonObj[more-1996][more];
+
+    lessLyr.removeFrom(myMap);
+    moreLyr.removeFrom(myMap);
+    thisLyr.addTo(myMap);
+
+  }
+}
 
 function legend() {
 
@@ -393,6 +536,7 @@ function legend() {
 };
 
 function pointCount(polyGeoJson, pointGeoJsonArray) {
+  // console.log("this is", polyGeoJson, pointGeoJsonArray);
   var polyGeoJsonCount = [];
   pointGeoJsonArray.forEach(function(ptGeoJson, index) {
 
@@ -402,6 +546,7 @@ function pointCount(polyGeoJson, pointGeoJsonArray) {
     var fc = Object.values(ptGeoJson)[0];
     var geoStr = "geo_"+index;
     var geoStr = _.cloneDeep(polyGeoJson)
+    // console.log(fc)
     var pointsWithin = turf.collect(geoStr, fc, 'count', 'count');
     // console.log(pointsWithin);
     pointsWithin.features.forEach(function(fc) {
@@ -409,6 +554,7 @@ function pointCount(polyGeoJson, pointGeoJsonArray) {
     });
     ctYearObj[year] = pointsWithin;
     newYearObj[year] = pointsWithin;
+    // console.log(newYearObj);
     polyGeoJsonCount.push(newYearObj);
     });
     return polyGeoJsonCount;
