@@ -408,7 +408,7 @@ function legend() {
      .attr("cy", 20)
      .attr("r", 5)
      .attr("stroke", "black")
-     .attr("fill", "#253494");
+     .attr("fill", "#8591e0");
 
   svg.append("text")
      .attr("x", 90)
@@ -422,7 +422,7 @@ function legend() {
       .attr("cy", 40)
       .attr("r", 5)
       .attr("stroke", "black")
-      .attr("fill", "#2c7fb8");
+      .attr("fill", "#5ba5d7");
 
   svg.append("text")
      .attr("x", 90)
@@ -610,9 +610,9 @@ function geoJsonConversion(obj) {
 
   function getColor(value) {
     return value >= 100
-      ? "#253494"
+      ? "#8591e0"
       : value >= 75
-      ? "#2c7fb8"
+      ? "#5ba5d7"
       : value >= 50
       ? "#41b6c4"
       : value >= 35
