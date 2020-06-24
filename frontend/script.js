@@ -169,7 +169,7 @@ if (myMap.hasLayer(gj96) && myMap.hasLayer(dotDensity2000)) {
   myMap.spin(false);
 }
 
-console.log("ct count", ctJsonObj);
+// console.log("ct count", ctJsonObj);
 
 function slider() {
 
@@ -408,7 +408,7 @@ function legend() {
      .attr("cy", 20)
      .attr("r", 5)
      .attr("stroke", "black")
-     .attr("fill", "#F24BFF");
+     .attr("fill", "#253494");
 
   svg.append("text")
      .attr("x", 90)
@@ -422,7 +422,7 @@ function legend() {
       .attr("cy", 40)
       .attr("r", 5)
       .attr("stroke", "black")
-      .attr("fill", "#FF5B58");
+      .attr("fill", "#2c7fb8");
 
   svg.append("text")
      .attr("x", 90)
@@ -436,7 +436,7 @@ function legend() {
      .attr("cy", 60)
      .attr("r", 5)
      .attr("stroke", "black")
-     .attr("fill", "#E87558");
+     .attr("fill", "#41b6c4");
 
  svg.append("text")
     .attr("x", 90)
@@ -450,7 +450,7 @@ function legend() {
       .attr("cy", 80)
       .attr("r", 5)
       .attr("stroke", "black")
-      .attr("fill", "#E8AA58");
+      .attr("fill", "#7fcdbb");
 
   svg.append("text")
      .attr("x", 90)
@@ -464,7 +464,7 @@ function legend() {
        .attr("cy", 100)
        .attr("r", 5)
        .attr("stroke", "black")
-       .attr("fill", "#FFA56E");
+       .attr("fill", "#c7e9b4");
 
    svg.append("text")
       .attr("x", 90)
@@ -478,7 +478,7 @@ function legend() {
         .attr("cy", 120)
         .attr("r", 5)
         .attr("stroke", "black")
-        .attr("fill", "#FFCF61");
+        .attr("fill", "#fffab3");
 
     svg.append("text")
        .attr("x", 90)
@@ -610,17 +610,17 @@ function geoJsonConversion(obj) {
 
   function getColor(value) {
     return value >= 100
-      ? "#F24BFF"
+      ? "#253494"
       : value >= 75
-      ? "#FF5B58"
+      ? "#2c7fb8"
       : value >= 50
-      ? "#E87558"
+      ? "#41b6c4"
       : value >= 35
-      ? "#E8AA58"
+      ? "#7fcdbb"
       : value >= 10
-      ? "#FFA56E"
+      ? "#c7e9b4"
       : value > 0
-      ? "#FFCF61"
+      ? "#fffab3"
       : "#FFF";
   };
 
